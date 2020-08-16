@@ -8,18 +8,19 @@ type Query {
     productFormat: String
     resultsPerPage: Int = 12
   ): ChaordicSearchOutput!
-    @cacheControl(scope: PUBLIC, maxAge: SHORT)
-    @withSecretKeys
+    @cacheControl(scope: SEGMENT, maxAge: SHORT)
+
 
   searchProductsAutoComplete(
     salesChannel: String
     terms: String = ""
   ): ChaordicSearchAutoCompleteOutput!
-    @cacheControl(scope: PUBLIC, maxAge: SHORT)
-    @withSecretKeys
+    @cacheControl(scope: SEGMENT, maxAge: SHORT)
+
 
   searchProductsAutoCompletePopular: ChaordicSearchAutoCompletePopularOutput!
-    @withSecretKeys
+    @cacheControl(scope: SEGMENT)
+
 
   chaordicRecommendations(
     chaordicBrowserId: String!
@@ -31,8 +32,8 @@ type Query {
     name: String
     productId: String
   ): ChaordicRecommendationsResult!
-    @cacheControl(scope: PUBLIC, maxAge: SHORT)
-    @withSecretKeys
+    @cacheControl(scope: SEGMENT, maxAge: SHORT)
+
 
   chaordicProductPageRecommendations(
     chaordicBrowserId: String!
@@ -41,10 +42,10 @@ type Query {
     type: String
     size: Int
   ): ChaordicProductPageRecommendations!
-    @cacheControl(scope: PUBLIC, maxAge: SHORT)
-    @withSecretKeys
+    @cacheControl(scope: SEGMENT, maxAge: SHORT)
+
 }
 
 type Mutation {
-  ChaordicImpression(impressionUrl: String!): Boolean @withSecretKeys
+  ChaordicImpression(impressionUrl: String!): Boolean
 }

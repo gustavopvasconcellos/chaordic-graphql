@@ -32,6 +32,21 @@ export interface ImpressionParams {
   impressionUrl: string
 }
 
+export const formatSalesChannel = (segmentToken?: any): string => {
+  if (!segmentToken) {
+    return ''
+  }
+
+  const segment = JSON.parse(atob(segmentToken))
+
+  function atob(b64Encoded: string) {
+    return Buffer.from(b64Encoded, 'base64').toString()
+  }
+
+  const franchise = segment.regionId ? `${atob(segment.regionId).replace('SW#', '')}-` : ''
+  return `${franchise}${segment.channel}`
+}
+
 const treatedStatusCodes = [404, 302]
 const treatedErrors = (e: any) => {
   if (
@@ -96,13 +111,21 @@ export default class Recommendation extends ExternalClient {
   private get(url: string, config?: RequestConfig) {
     const params = {
       ...config?.params,
-      apiKey: this.apiKey,
-      secretKey: this.secretKey,
+      ...(config?.params?.salesChannel === '2' || this.context.account === 'carrefourbrfood' ? {
+        apiKey: 'carrefour-mercado',
+        salesChannel: formatSalesChannel(this.context.segmentToken),
+        secretKey: 'QzxeJ51fyYU4kyNwAt27og==',
+      } : {
+        apiKey: 'carrefour-shopping',
+        secretKey: 'K6a47aIuaXGhe5d4NNSsEA==',
+      }),
       ...(!this.context.production && {
         dummy: true,
         homologation: true,
       }),
     }
+
+    console.log(params)
 
     return this.http
       .get(url, {

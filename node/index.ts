@@ -1,7 +1,6 @@
 import { LRUCache, Service, ServiceContext } from '@vtex/api'
 
 import { Clients } from './clients'
-import { WithSecretKeys } from './directives/secretKeys'
 import { mutations as recommendationMutations, queries as recommendationQueries } from './resolvers/recommendations'
 import { queries as searchQueries, rootResolvers } from './resolvers/search'
 
@@ -43,9 +42,6 @@ export default new Service<Clients>({
         ...recommendationQueries,
         ...searchQueries,
       },
-    },
-    schemaDirectives: {
-      withSecretKeys: WithSecretKeys,
     },
   },
 })

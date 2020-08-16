@@ -1,5 +1,6 @@
 import { ExternalClient, InstanceOptions, IOContext, RequestConfig } from '@vtex/api'
 import { stringify } from 'qs'
+import { formatSalesChannel } from './recommendation'
 
 export interface SearchParams {
   filter: string
@@ -66,12 +67,14 @@ export default class Search extends ExternalClient {
 
   private get(url: string, config?: RequestConfig) {
     const params = {
-      ...config && config.params,
-      apiKey: this.apiKey,
-      secretKey: this.secretKey,
-      ...(!this.context.production && {
-        dummy: true,
-        homologation: true,
+      ...config?.params,
+      ...(config?.params?.salesChannel === '2' || this.context.account === 'carrefourbrfood' ? {
+        apiKey: 'carrefour-mercado',
+        salesChannel: formatSalesChannel(this.context.segmentToken),
+        secretKey: 'QzxeJ51fyYU4kyNwAt27og==',
+      } : {
+        apiKey: 'carrefour-shopping',
+        secretKey: 'K6a47aIuaXGhe5d4NNSsEA==',
       }),
     }
 
